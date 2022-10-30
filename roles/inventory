@@ -1,0 +1,9 @@
+[defaults]
+
+inventory = inventory
+Host_key_checking = False
+
+Depracation_warnings = False
+
+Remote_users = penaverde
+Private_key_file= ~/.ssh/

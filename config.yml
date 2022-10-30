@@ -1,0 +1,62 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: install updates (Ubuntu)
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: install update (CentOS)
+    tags: always
+    yum:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
+
+- hosts: db_server
+  name: Install Nagios in one host
+  become: true
+  tasks:
+
+  - name: Install Nagios in Ubuntu host
+    apt:
+      name:
+        - nagios
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Install Nagios in CentOS is host
+    yum:
+      name:
+        - nagios
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
+
+- hosts: web_server
+  become: true
+  tasks:
+
+  - name: Install Elastic Stack (elasticsearch, kibana, logstash) Ubuntu
+    apt:
+      name:
+        - elasticsearch
+        - kibana
+        - logstash
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Install Elastic stack (elasticsearch, kibana, logstash) CentOS
+    yum:
+      name:
+        - elasticsearch
+        - kibana
+        - logstash
+      sta

@@ -1,0 +1,32 @@
+---
+
+- hosts: remote_servers
+  become: true
+  tasks:
+
+  - name: install grafana in ubuntu
+    apt:
+      name:
+        - grafana-server
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: install grafana requisites for centos
+    tags: centos, snapd, epel-release
+    yum:
+      name:
+        - epel-release
+        - snapd
+      state: latest
+    when: ansible_distribution == "CentOS"
+
+  - name: enabling sockets for centos
+    tags: snapd, centos
+    command: systemctl enable --now snapd.socket
+    when: ansible_distribution == "CentOS"
+
+  - name: finishing installation of grafana in centos
+    tags: centos, grafana
+    command: snapd install grafana --calssic
+    when: ansible_distribution == "CentOS"

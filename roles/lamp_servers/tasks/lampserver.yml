@@ -1,0 +1,41 @@
+---
+- hosts: lamp_servers
+  become: true
+  tasks:
+
+  - name: install lamp (php,httpd) for ubuntu
+    apt:
+      name:
+        - apache2
+        - php
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: install mariadb package for Ubuntu
+    apt:
+      name: mariadb-server
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+
+  - name: install lamp (php,httpd) for centos
+    dnf:
+      name:
+        - php
+        - httpd
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
+
+  - name: install mariadb package for centos
+    yum:
+      name: mariadb-server
+      state: latest
+    when: ansible_distribution == "CentOS"
+
+  - name: "Mariadb- Restarting/Enabling"
+    service:
+      name: mariadb
+      state: restarted
+      enabled: true
+ 
